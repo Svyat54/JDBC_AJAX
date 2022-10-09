@@ -19,7 +19,7 @@
 <html>
 <head>
     <title>JSP - HomeWork</title>
-    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <%--    <form name="countryRequest">--%>

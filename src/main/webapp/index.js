@@ -15,7 +15,6 @@ let subtask = "country";
 subtaskSelectionDraw(taskChoice);
 drawValueRequestForm(subtask);
 
-
 function sendCountryRequest(subtask) {
     $.ajax({
         url: '/Lesson5_AJAX_war_exploded/hello-servlet',
@@ -27,6 +26,7 @@ function sendCountryRequest(subtask) {
         },
         success: function (data) {
             let jsonObject = JSON.parse(data);
+            updateTable(document.getElementById("responseTable"), jsonObject);
             console.log(jsonObject);
         }
     });
@@ -42,6 +42,7 @@ function sendPageTypeRequest(subtask) {
         },
         success: function (data) {
             let jsonObject = JSON.parse(data);
+            updateTable(document.getElementById("responseTable"), jsonObject);
             console.log(jsonObject);
         }
     });
@@ -58,6 +59,7 @@ function sendPageAmountRequest(subtask) {
         },
         success: function (data) {
             let jsonObject = JSON.parse(data);
+            updateTable(document.getElementById("responseTable"), jsonObject);
             console.log(jsonObject);
         }
     });
@@ -78,7 +80,7 @@ function sendInsertRequest(subtask) {
         },
         success: function (data) {
             let jsonObject = JSON.parse(data);
-            console.log(jsonObject);
+            alert(jsonObject);
         }
     });
     }
@@ -99,7 +101,7 @@ function sendEditRequest(subtask) {
         },
         success: function (data) {
             let jsonObject = JSON.parse(data);
-            console.log(jsonObject);
+            alert(jsonObject);
         }
     });
 }
@@ -114,7 +116,7 @@ function sendDeleteRequest(subtask) {
         },
         success: function (data) {
             let jsonObject = JSON.parse(data);
-            console.log(jsonObject);
+            alert(jsonObject);
         }
     });
     setTimeout(deleteDiv, 1000);
@@ -279,6 +281,7 @@ function drawValueRequestForm(subtask) {
     let button = getButton();
     form.appendChild(input);
     div.appendChild(form);
+    drawTable(div);
     div.appendChild(button);
     document.getElementById("choiceTaskDiv").appendChild(div);
 }
@@ -295,6 +298,7 @@ function drawPageAmountRequestForm() {
     form.appendChild(minPagesInput);
     form.appendChild(maxPagesInput);
     div.appendChild(form);
+    drawTable(div);
     div.appendChild(button);
     document.getElementById("choiceTaskDiv").appendChild(div);
 }
@@ -378,4 +382,42 @@ function chooseTask5() {
     subtaskSelectionDraw(taskChoice);
     subtask = "insert";
     drawInsertEditRequestForm(subtask);
+}
+
+//Отображение
+function drawTable(div){
+    let table = document.createElement("table");
+    table.id = "responseTable";
+    table.setAttribute("class", "responseTable");
+    div.appendChild(table);
+
+}
+function updateTable(table, jsonObject){
+    while (table.lastChild != null) table.lastChild.remove();
+    for(let i = 0; i < jsonObject.length; i++){
+        table.appendChild(getRow(jsonObject[i]));
+    }
+}
+function getCell(value, entity){
+    let cell = document.createElement("td");
+    if(value === "id") cell.innerHTML = entity.id;
+    if(value === "brand") cell.innerHTML = entity.brand;
+    if(value === "name") cell.innerHTML = entity.name;
+    if(value === "pageType") cell.innerHTML = entity.pageType;
+    if(value === "cover") cell.innerHTML = entity.cover;
+    if(value === "country") cell.innerHTML = entity.country;
+    if(value === "pageAmount") cell.innerHTML = entity.pageAmount;
+    cell.setAttribute("class", "cell");
+    return cell;
+}
+function getRow(entity){
+    let row = document.createElement("tr");
+    row.appendChild(getCell("id", entity));
+    row.appendChild(getCell("brand", entity));
+    row.appendChild(getCell("name", entity));
+    row.appendChild(getCell("pageType", entity));
+    row.appendChild(getCell("cover", entity));
+    row.appendChild(getCell("country", entity));
+    row.appendChild(getCell("pageAmount", entity));
+    return row;
 }

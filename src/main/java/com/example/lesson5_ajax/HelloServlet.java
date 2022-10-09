@@ -13,7 +13,12 @@ import jakarta.servlet.annotation.*;
 @WebServlet(name = "helloServlet", value = "/hello-servlet")
 public class HelloServlet extends HttpServlet {
     public void init() {}
-    public void doGet(HttpServletRequest request, HttpServletResponse response) {}
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        System.out.println("****** doGet is working ******");
+        PrintWriter writer = response.getWriter();
+        System.out.println("Hello tvarb");
+
+    }
     private String valueRequest(HttpServletRequest request) {
         DbNotepadAgent agent = new DbNotepadAgent(System.getenv("url"), System.getenv("userName"),
                 System.getenv("password"));
@@ -57,7 +62,7 @@ public class HelloServlet extends HttpServlet {
         DbNotepadAgent agent = new DbNotepadAgent(System.getenv("url"), System.getenv("userName"),
                 System.getenv("password"));
         agent.deleteRequest(Integer.parseInt(request.getParameter("id")));
-        return getJson("Удаляем id" + " - " + request.getParameter("id"));
+        return getJson("Delete id" + " - " + request.getParameter("id"));
     }
     private String insertRequest(HttpServletRequest request) throws SQLException{
         DbNotepadAgent agent = new DbNotepadAgent(System.getenv("url"), System.getenv("userName"),
@@ -67,7 +72,7 @@ public class HelloServlet extends HttpServlet {
                 Integer.parseInt(request.getParameter("pageAmount")), request.getParameter("cover"),
                 request.getParameter("country"), request.getParameter("pageType"));
         agent.insertRequest(notepad);
-        return getJson("Из метода Insert");
+        return getJson("New record inserted");
     }
     private String chooseRequest(HttpServletRequest request) throws SQLException {
         if (request.getParameter("subtask").equals("country") ||
