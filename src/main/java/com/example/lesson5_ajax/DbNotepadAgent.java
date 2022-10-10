@@ -6,9 +6,9 @@ import java.sql.*;
 import java.util.LinkedList;
 
 public class DbNotepadAgent {
-    private String url; /*= "jdbc:mysql://localhost:3306/notepads";*/
-    private String name; /* = "root";*/
-    private String password; /* = "ItsMyLife0203";*/
+    private String url;
+    private String name;
+    private String password;
     private Connection connection;
     LinkedList<Notepad> list;
     public DbNotepadAgent(String url, String name, String password) {
@@ -48,11 +48,6 @@ public class DbNotepadAgent {
             throw new RuntimeException(e);
         }
         return list;
-    }
-    public void printList() {
-        for (Notepad notepad: list) {
-            System.out.println(notepad);
-        }
     }
     public void closeConnection() {
         try {
