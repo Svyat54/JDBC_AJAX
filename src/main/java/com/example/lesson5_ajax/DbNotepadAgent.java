@@ -3,6 +3,7 @@ package com.example.lesson5_ajax;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.sql.*;
+import java.util.Arrays;
 import java.util.LinkedList;
 
 public class DbNotepadAgent {
@@ -30,7 +31,6 @@ public class DbNotepadAgent {
         try {
             statement = this.connection.createStatement();
             ResultSet result = statement.executeQuery(query);
-//            int colsAmount = result.getMetaData().getColumnCount();  ПРОВЕРИТЬ ВТОРОЙ ВАРИАНТ
             while (result.next()) {
                 int id = result.getInt("id");
                 String brand = result.getString("brand");
@@ -39,8 +39,6 @@ public class DbNotepadAgent {
                 String cover = result.getString("cover");
                 String country = result.getString("country");
                 String pageType = result.getString("pageType");
-//                Notepad notepad = new Notepad(brand, name, pageAmount, cover, country, pageType); ВТОРОЙ ВАРИАНТ
-//                notepad.setId(id);
                 list.add(new Notepad(id, brand, name, pageAmount, cover, country, pageType));
             }
             statement.close();
@@ -130,6 +128,16 @@ public class DbNotepadAgent {
                     resultSet.getString("name"), resultSet.getInt("pageAmount"),
                     resultSet.getString("cover"), resultSet.getString("country"),
                     resultSet.getString("pageType")));
+        return list;
+    }
+    public LinkedList<String> uniquePageTypesRequest() throws SQLException {
+        String query = "SELECT DISTINCT pageType FROM notebooks;";
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery(query);
+        LinkedList<String> list = new LinkedList<>();
+        while (resultSet.next())
+            list.add(resultSet.getString("pageType"));
+        System.out.println(Arrays.toString(list.toArray()));
         return list;
     }
     public LinkedList<Notepad> valueRequest(String subtask, String value) throws SQLException {

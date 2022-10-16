@@ -45,6 +45,11 @@ public class HelloServlet extends HttpServlet {
             throw new RuntimeException(e);
         }
     }
+    private String pageTypesRequest(HttpServletRequest request) throws SQLException {
+        DbNotepadAgent agent = new DbNotepadAgent(System.getenv("url"), System.getenv("userName"),
+                System.getenv("password"));
+        return getJson(agent.uniquePageTypesRequest());
+    }
     private String idsRequest() throws SQLException {
         DbNotepadAgent agent = new DbNotepadAgent(System.getenv("url"), System.getenv("userName"),
                 System.getenv("password"));
@@ -89,6 +94,8 @@ public class HelloServlet extends HttpServlet {
             return deleteRequest(request);
         if (request.getParameter("subtask").equals("insert"))
             return insertRequest(request);
+        if(request.getParameter("subtask").equals("uniquePageType"))
+            return pageTypesRequest(request);
         else return null;
     }
     private String getJson(Object resp) {

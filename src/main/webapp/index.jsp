@@ -31,8 +31,8 @@
 <div class="container">
     <div id="choiceTaskDiv" class="modal">
         <div id="taskChoice" class="taskChoice">
-            <p class="parChoice" id="Task4" onclick="chooseTask4()"><b>Task4</b></p>
-            <p class="parChoice" id="Task5" onclick="chooseTask5()">Task5</p>
+            <p class="parChoice" id="Task4" onclick="chooseRequests()"><b>Selects</b></p>
+            <p class="parChoice" id="Task5" onclick="chooseUpdates()">Updates</p>
         </div>
     </div>
 </div>

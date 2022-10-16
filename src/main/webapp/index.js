@@ -1,21 +1,9 @@
-function getOptions(value){
-    let opt = document.createElement("option");
-    opt.innerHTML = value;
-    return opt;
-}
-
-function addOptions(ids){
-    for(let i = 0; i < ids.length; i++){
-        document.getElementById("selectId").appendChild(getOptions(ids[i]));
-    }
-}
-
 let taskChoice = 4;
 let subtask = "country";
 subtaskSelectionDraw(taskChoice);
 drawValueRequestForm(subtask);
 
-function sendCountryRequest(subtask) {
+function sendCountryRequest() {
     $.ajax({
         url: '/Lesson5_AJAX_war_exploded/hello-servlet',
         method: 'post',
@@ -25,29 +13,25 @@ function sendCountryRequest(subtask) {
             country: document.forms.requestForm.country.value
         },
         success: function (data) {
-            let jsonObject = JSON.parse(data);
-            updateTable(document.getElementById("responseTable"), jsonObject);
-            console.log(jsonObject);
+            updateTable(document.getElementById("responseTable"), JSON.parse(data));
         }
     });
 }
-function sendPageTypeRequest(subtask) {
+function sendPageTypeRequest() {
     $.ajax({
         url: '/Lesson5_AJAX_war_exploded/hello-servlet',
         method: 'post',
         dataType:'html',
         data: {
             subtask: subtask,
-            pageType: document.forms.requestForm.pageType.value
+            pageType: document.forms.requestForm.selectPageType.value
         },
         success: function (data) {
-            let jsonObject = JSON.parse(data);
-            updateTable(document.getElementById("responseTable"), jsonObject);
-            console.log(jsonObject);
+            updateTable(document.getElementById("responseTable"), JSON.parse(data));
         }
     });
 }
-function sendPageAmountRequest(subtask) {
+function sendPageAmountRequest() {
     $.ajax({
         url: '/Lesson5_AJAX_war_exploded/hello-servlet',
         method: 'post',
@@ -58,33 +42,11 @@ function sendPageAmountRequest(subtask) {
             maxPages: document.forms.requestForm.maxPages.value
         },
         success: function (data) {
-            let jsonObject = JSON.parse(data);
-            updateTable(document.getElementById("responseTable"), jsonObject);
-            console.log(jsonObject);
+            updateTable(document.getElementById("responseTable"), JSON.parse(data));
         }
     });
 }
-function sendInsertRequest(subtask) {
-    $.ajax({
-        url: '/Lesson5_AJAX_war_exploded/hello-servlet',
-        method: 'post',
-        dataType:'html',
-        data: {
-            subtask: subtask,
-            brand: document.forms.requestForm.brand.value,
-            name: document.forms.requestForm.name.value,
-            pageAmount: document.forms.requestForm.pageAmount.value,
-            cover: document.forms.requestForm.cover.value,
-            country: document.forms.requestForm.country.value,
-            pageType: document.forms.requestForm.pageType.value,
-        },
-        success: function (data) {
-            let jsonObject = JSON.parse(data);
-            alert(jsonObject);
-        }
-    });
-    }
-function sendEditRequest(subtask) {
+function sendUpdateRequest() {
     $.ajax({
         url: '/Lesson5_AJAX_war_exploded/hello-servlet',
         method: 'post',
@@ -100,12 +62,30 @@ function sendEditRequest(subtask) {
             pageType: document.forms.requestForm.pageType.value,
         },
         success: function (data) {
-            let jsonObject = JSON.parse(data);
-            alert(jsonObject);
+            alert(JSON.parse(data));
         }
     });
 }
-function sendDeleteRequest(subtask) {
+function sendInsertRequest() {
+    $.ajax({
+        url: '/Lesson5_AJAX_war_exploded/hello-servlet',
+        method: 'post',
+        dataType:'html',
+        data: {
+            subtask: subtask,
+            brand: document.forms.requestForm.brand.value,
+            name: document.forms.requestForm.name.value,
+            pageAmount: document.forms.requestForm.pageAmount.value,
+            cover: document.forms.requestForm.cover.value,
+            country: document.forms.requestForm.country.value,
+            pageType: document.forms.requestForm.pageType.value,
+        },
+        success: function (data) {
+            alert(JSON.parse(data));
+        }
+    });
+}
+function sendDeleteRequest() {
     $.ajax({
         url: '/Lesson5_AJAX_war_exploded/hello-servlet',
         method: 'post',
@@ -115,20 +95,19 @@ function sendDeleteRequest(subtask) {
             id : document.forms.requestForm.selectId.value
         },
         success: function (data) {
-            let jsonObject = JSON.parse(data);
-            alert(jsonObject);
+            alert(JSON.parse(data));
         }
     });
-    setTimeout(deleteDiv, 1000);
+    setTimeout(updateDeleteRequestForm, 1000);
 }
 
-function sendRequest(subtask) {
-    if (subtask === "country") sendCountryRequest(subtask);
-    if (subtask === "pageType") sendPageTypeRequest(subtask);
-    if (subtask === "pageAmount") sendPageAmountRequest(subtask);
+function sendRequest() {
+    if (subtask === "country") sendCountryRequest();
+    if (subtask === "pageType") sendPageTypeRequest();
+    if (subtask === "pageAmount") sendPageAmountRequest();
     if (subtask === "insert") sendInsertRequest(subtask);
-    if (subtask === "edit") sendEditRequest(subtask);
-    if (subtask === "delete") sendDeleteRequest(subtask);
+    if (subtask === "update") sendUpdateRequest();
+    if (subtask === "delete") sendDeleteRequest();
 }
 
 function subtaskSelectionDraw(task) {
@@ -154,7 +133,7 @@ function subtaskSelectionDraw(task) {
         opt3.innerHTML = "pageAmount";
     } else {
         opt1.innerHTML = "insert";
-        opt2.innerHTML = "edit";
+        opt2.innerHTML = "update";
         opt3.innerHTML = "delete";
     }
     selectTask.appendChild(opt1);
@@ -167,20 +146,25 @@ function getInput(value) {
     input.type = "text";
     input.name = value;
     input.setAttribute("class", "requestInput");
-    input.placeholder = value;
+    input.id = value;
+    if (value === "cover")
+        input.placeholder = value + " (hard, soft)"
+    else if (value === "pageType")
+        input.placeholder = value + " (bold, lined, squared)"
+    else
+        input.placeholder = value;
     return input;
 }
 function getButton() {
     let button = document.createElement("button");
     button.setAttribute("class", "requestButton");
     button.innerHTML = "request";
-    button.setAttribute("onclick", "sendRequest(\"" + subtask.toString() + "\")")
-    button.id = "requestButton";
-    // button.innerHTML = "<script src=\"buttonScript.js\"></script>";
+    button.setAttribute("onclick", "sendRequest()");
+    button.id = "requestButton"
     return button;
 }
 
-function selectSelectListener(id) {
+function selectUpdateListener(id) {
     $.ajax({
         url: '/Lesson5_AJAX_war_exploded/hello-servlet',
         method: 'post',
@@ -206,7 +190,7 @@ function selectSelectListener(id) {
         }
     });
 }
-function selectDeleteListener(id){
+function selectDeleteListener(id) {
     $.ajax({
         url: '/Lesson5_AJAX_war_exploded/hello-servlet',
         method: 'post',
@@ -214,30 +198,20 @@ function selectDeleteListener(id){
         data: {
             subtask: 'id',
             id: id
-        },
-        success: function (data) {
-            let jsonObject = JSON.parse(data);
-            console.log(jsonObject);
         }
     });
-    // document.getElementById('selectId').remove();
-    // document.getElementById("requestButton").remove();
-    // drawDeleteRequestForm();
 }
 function drawIdOptions() {
     $.ajax({
         url: '/Lesson5_AJAX_war_exploded/hello-servlet',         /* Куда пойдет запрос */
-        method: 'post',             /* Метод передачи (post или get) */
-        dataType: 'html',          /* Тип данных в ответе (xml, json, script, html). */
+        method: 'post',
+        dataType: 'html',
         data: {
-            // type: 'requestIds',
             subtask: 'requestIds'
-        },     /* Параметры передаваемые в запросе. */
-        success: function(data){   /* функция которая будет выполнена после успешного запроса.  */
+        },
+        success: function(data){
             let jsonObject = JSON.parse(data);
-            // console.log(jsonObject);
-            addOptions(jsonObject);/* В переменной data содержится ответ от index.php. */
-            // console.log("drawOptionsEnd");
+            addOptions(jsonObject, "selectId");
         }
     });
 }
@@ -246,28 +220,47 @@ function getOption(id) {
     option.innerHTML = id;
     return option;
 }
-function addOptions(ids) {
-    for (let i = 0; i < ids.length; i ++) {
-        document.getElementById("selectId").appendChild(getOption(ids[i]));
-    }
+function addOptions(values, selectId) {
+    for (let i = 0; i < values.length; i ++)
+        document.getElementById(selectId).appendChild(getOption(values[i]));
 }
 function getSelectId() {
     let select = document.createElement("select");
     select.setAttribute("class", "requestInput");
     select.id = "selectId";
-    if(subtask === 'edit'){
+    if(subtask === 'update'){
         select.addEventListener("change", function () {
-            selectSelectListener(this.value)
+            selectUpdateListener(this.value)
         });
     }else
-    select.addEventListener("change", function () {
-        selectDeleteListener(this.value)
-    });
+        select.addEventListener("change", function () {
+            selectDeleteListener(this.value)
+        });
     return select;
 }
-function deleteDiv() {
+function updateDeleteRequestForm() {
     document.getElementById("requestDiv").remove();
     drawDeleteRequestForm();
+}
+
+function getSelectPageType() {
+    let select = document.createElement("select");
+    select.id = "selectPageType";
+    select.setAttribute("class", "requestInput");
+    $.ajax({
+        url: '/Lesson5_AJAX_war_exploded/hello-servlet',
+        method: 'post',
+        dataType:'html',
+        data: {
+            subtask: "uniquePageType",
+            value: "pageType"
+        },
+        success: function(data) {
+            let jsonObject = JSON.parse(data);
+            addOptions(jsonObject, select.id);
+        }
+    })
+    return select;
 }
 
 function drawValueRequestForm(subtask) {
@@ -277,7 +270,11 @@ function drawValueRequestForm(subtask) {
     let form = document.createElement("form");
     form.id = "requestForm";
     form.setAttribute("class", "requestForm");
-    let input = getInput(subtask);
+    let input;
+    if (subtask === "country")
+        input = getInput(subtask);
+    else
+        input = getSelectPageType();
     let button = getButton();
     form.appendChild(input);
     div.appendChild(form);
@@ -312,10 +309,20 @@ function drawInsertEditRequestForm() {
     let brand = getInput("brand");
     let name = getInput("name");
     let pageAmount = getInput("pageAmount");
-    let cover = getInput("cover")
+    pageAmount.addEventListener("change", function () {
+        pageAmountValidation();
+    });
+    let cover = getInput("cover");
+    cover.addEventListener("change", function () {
+        coverValidation();
+    });
     let country = getInput("country");
-    let pageType = getInput("pageType")
-    if (subtask === "edit") {
+    let pageType = getInput("pageType");
+    pageType.addEventListener("change", function () {
+        pageTypeValidation();
+    });
+
+    if (subtask === "update") {
         let id = getSelectId();
         form.appendChild(id);
         drawIdOptions();
@@ -330,8 +337,8 @@ function drawInsertEditRequestForm() {
     let button = getButton()
     div.appendChild(button);
     document.getElementById("choiceTaskDiv").appendChild(div);
-    if (subtask === "edit")
-        selectSelectListener(1);
+    if (subtask === "update")
+        selectUpdateListener(1);
 }
 function drawDeleteRequestForm(){
     let div = document.createElement("div");
@@ -350,6 +357,47 @@ function drawDeleteRequestForm(){
     div.appendChild(button);
     document.getElementById("choiceTaskDiv").appendChild(div);
 }
+function drawInsertUpdateRequestForm() {
+    let div = document.createElement("div");
+    div.id = "requestDiv";
+    div.setAttribute("class", "requestForm");
+    let form = document.createElement("form");
+    form.id = "requestForm";
+    form.setAttribute("class", "requestForm");
+    let brand = getInput("brand");
+    let name = getInput("name");
+    let pageAmount = getInput("pageAmount");
+    pageAmount.addEventListener("change", function () {
+        pageAmountValidation();
+    });
+    let cover = getInput("cover");
+    cover.addEventListener("change", function () {
+        coverValidation();
+    });
+    let country = getInput("country");
+    let pageType = getInput("pageType");
+    pageType.addEventListener("change", function () {
+        pageTypeValidation();
+    });
+
+    if (subtask === "update") {
+        let id = getSelectId();
+        form.appendChild(id);
+        drawIdOptions();
+    }
+    form.appendChild(brand);
+    form.appendChild(name);
+    form.appendChild(pageAmount);
+    form.appendChild(cover);
+    form.appendChild(country);
+    form.appendChild(pageType);
+    div.appendChild(form);
+    let button = getButton()
+    div.appendChild(button);
+    document.getElementById("choiceTaskDiv").appendChild(div);
+    if (subtask === "update")
+        selectUpdateListener(1);
+}
 
 function selectListener(value) {
     if (document.getElementById("choiceTaskDiv").lastChild.id === "requestDiv")
@@ -358,30 +406,29 @@ function selectListener(value) {
     if (value === "country") drawValueRequestForm(subtask);
     if (value === "pageType") drawValueRequestForm(subtask);
     if (value === "pageAmount") drawPageAmountRequestForm();
-    if (value === "insert") drawInsertEditRequestForm();
-    if (value === "edit") drawInsertEditRequestForm();
+    if (value === "insert") drawInsertUpdateRequestForm();
+    if (value === "update") drawInsertUpdateRequestForm();
     if (value === "delete") drawDeleteRequestForm();
-
 }
-function chooseTask4() {
+function chooseRequests() {
     taskChoice = 4;
     if (document.getElementById("choiceTaskDiv").lastChild.id === "requestDiv")
         document.getElementById("choiceTaskDiv").lastChild.remove();
-    document.getElementById("Task4").innerHTML = "<b>Task4</b>";
-    document.getElementById("Task5").innerHTML = "Task5";
+    document.getElementById("Task4").innerHTML = "<b>Requests</b>";
+    document.getElementById("Task5").innerHTML = "Updates";
     subtaskSelectionDraw(taskChoice);
     subtask = "country";
     drawValueRequestForm(subtask);
 }
-function chooseTask5() {
+function chooseUpdates() {
     taskChoice = 5
     if (document.getElementById("choiceTaskDiv").lastChild.id === "requestDiv")
         document.getElementById("choiceTaskDiv").lastChild.remove();
-    document.getElementById("Task4").innerHTML = "Task4";
-    document.getElementById("Task5").innerHTML = "<b>Task5</b>";
+    document.getElementById("Task4").innerHTML = "Requests";
+    document.getElementById("Task5").innerHTML = "<b>Updates</b>";
     subtaskSelectionDraw(taskChoice);
     subtask = "insert";
-    drawInsertEditRequestForm(subtask);
+    drawInsertUpdateRequestForm(subtask);
 }
 
 //Отображение
@@ -390,10 +437,10 @@ function drawTable(div){
     table.id = "responseTable";
     table.setAttribute("class", "responseTable");
     div.appendChild(table);
-
 }
 function updateTable(table, jsonObject){
-    while (table.lastChild != null) table.lastChild.remove();
+    while (table.lastChild != null)
+        table.lastChild.remove();
     for(let i = 0; i < jsonObject.length; i++){
         table.appendChild(getRow(jsonObject[i]));
     }
@@ -420,4 +467,28 @@ function getRow(entity){
     row.appendChild(getCell("country", entity));
     row.appendChild(getCell("pageAmount", entity));
     return row;
+}
+
+//Отработка ошибок ввода
+function coverValidation() {
+    let val = document.getElementById("cover").value;
+    console.log(val !== "hard" && val !== "soft");
+    if (val !== "hard" && val !== "soft")
+        document.getElementById("cover").style.borderColor = "#EA0A0AFF";
+    else
+        document.getElementById("cover").style.borderColor = "#b2a0a0";
+}
+function pageTypeValidation() {
+    let val = document.getElementById("pageType").value;
+    if (val !== "bold" && val !== "lined" && val !== "squared")
+        document.getElementById("pageType").style.borderColor = "#EA0A0AFF";
+    else
+        document.getElementById("pageType").style.borderColor = "#b2a0a0";
+}
+function pageAmountValidation() {
+    let val = document.getElementById("pageAmount").value;
+    if (isNaN(val) || val < 2)
+        document.getElementById("pageAmount").style.borderColor = "#EA0A0AFF";
+    else
+        document.getElementById("pageAmount").style.borderColor = "#b2a0a0";
 }
