@@ -109,7 +109,7 @@ function sendRequest() {
     if (subtask === "update") sendUpdateRequest();
     if (subtask === "delete") sendDeleteRequest();
 }
-
+//
 function subtaskSelectionDraw(task) {
     if (document.getElementById("choiceTaskDiv").lastChild.id === "requestForm")
         document.getElementById("choiceTaskDiv").lastChild.remove();

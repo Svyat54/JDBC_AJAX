@@ -209,4 +209,5 @@ public class DbNotepadAgent {
         Statement statement = connection.createStatement();
         statement.executeUpdate(query);
     }
+
 }

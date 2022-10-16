@@ -50,6 +50,7 @@ public class HelloServlet extends HttpServlet {
                 System.getenv("password"));
         return getJson(agent.uniquePageTypesRequest());
     }
+
     private String idsRequest() throws SQLException {
         DbNotepadAgent agent = new DbNotepadAgent(System.getenv("url"), System.getenv("userName"),
                 System.getenv("password"));
