@@ -16,7 +16,7 @@ public class HelloServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         System.out.println("****** doGet is working ******");
         PrintWriter writer = response.getWriter();
-        System.out.println("Hello tvarb");
+        System.out.println("Hello");
 
     }
     private String valueRequest(HttpServletRequest request) {
